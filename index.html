@@ -1,9 +1,27 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-	<link rel="stylesheet" type="text/css" href="styles.css" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>XML to Table</title>
+	<link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-	<!-- Your code here -->
-	<script type="text/javascript" src="scripts.js"></script>
+	<nav>
+		<ul>
+			<li><a href="index.html">Inensia JS Task</a></li>
+			<li style="float:right">
+				<a class="active">
+					<button id="export-button">Export to CSV</button>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<div id="tableDiv">
+	</div>
+	<script type="module"src="scripts.js"></script>	
 </body>
+
 </html>
