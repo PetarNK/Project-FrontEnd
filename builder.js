@@ -1,4 +1,3 @@
-// Generating the table body and appending it to a div
 export function generateTable(headers, data) {
     const table = document.createElement('table');
     const thead = table.createTHead();
@@ -10,7 +9,6 @@ export function generateTable(headers, data) {
         const cell = document.createElement('th');
         cell.textContent = header;
         headerRow.appendChild(cell);
-        console.log(header);
     });
 
     const row = tbody.insertRow();
@@ -19,7 +17,6 @@ export function generateTable(headers, data) {
             if (cellData != undefined) {
                 const cell = row.insertCell();
                 cell.textContent = cellData || '';
-                console.log(cellData);
             }
         });
     });

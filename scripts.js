@@ -7,9 +7,14 @@ import * as builder from './builder.js';
 import { export_table_to_csv } from './ExportToCSV.js';
 
 async function main() {
-    const url = 'https://test.ce2s.net/Study.xml';
-    const xmlDoc = await fetcher.fetchXML(url);
-
+    let xmlDoc;
+    try {
+        const url = 'https://test.ce2s.net/Study.xml';
+        xmlDoc = await fetcher.fetchXML(url);
+    } catch (e) {
+        alert('Fetch was not succesful! Check URL or server!');
+        return false;
+    }
     const fields = {
         sys_System: ['name'],
         sm_Study: ['name', 'state'],
@@ -22,25 +27,42 @@ async function main() {
         ],
         re_Requirement: ['ar_conditionexp'],
     };
-
-    const headers = Object.keys(fields).reduce((acc, alias) => {
-        console.log(alias.split('_')[1]);
-        return acc.concat(
+    let headersNames;
+    let data;
+    try {
+        headersNames = Object.keys(fields).flatMap((alias) =>
             fields[alias].map((field) => `${alias.split('_')[1]} ${field}`)
         );
-    }, []);
 
-    const data = Object.entries(fields).reduce((acc, [alias, fieldArray]) => {
-        const fieldData = extractor.getFieldData(xmlDoc, alias, fieldArray);
-        acc.push(fieldData);
-        return acc;
-    }, []);
-
-    const table = builder.generateTable(headers, data);
-
-    document
-        .getElementById('export-button')
-        .addEventListener('click', () => export_table_to_csv('TableToCSVFile'));
+        data = Object.entries(fields).reduce((acc, [alias, fieldArray]) => {
+            const fieldData = extractor.getFieldData(xmlDoc, alias, fieldArray);
+            acc.push(fieldData);
+            return acc;
+        }, []);
+    } catch (error) {
+        console.log('Error during data processing:', error);
+        alert('An error occurred while processing the data!');
+        return false;
+    }
+    let table;
+    try {
+        table = builder.generateTable(headersNames, data);
+    } catch (error) {
+        console.log('Error during table generating!', error);
+        alert('An error has occured while generating the table!');
+        return false;
+    }
+    try {
+        document
+            .getElementById('export-button')
+            .addEventListener('click', () =>
+                export_table_to_csv('TableToCSVFile')
+            );
+    } catch (error) {
+        console.log('Error during event binding!', error);
+        alert('An error has occured while binding the button!');
+        return false;
+    }
 }
 
 main();
